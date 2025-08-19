@@ -171,7 +171,7 @@ def main():
     #custom label 추
     custom_labels = _load_custom_labels(args)
     if args.verbose and custom_labels:
-    print(f"🧩 Using custom labels ({len(custom_labels)}): {custom_labels[:8]}{' ...' if len(custom_labels)>8 else ''}")
+        print(f"🧩 Using custom labels ({len(custom_labels)}): {custom_labels[:8]}{' ...' if len(custom_labels)>8 else ''}")
     
     if args.verbose:
         print("🚀 Starting DeBERTa NLI Multi-Label Pipeline")
@@ -209,7 +209,7 @@ def main():
         id2meta = load_business_meta(str(PATH_BUSINESS), biz_ids)
         
         # 바로 NLI 분석으로 점프
-        jump_to_nli_analysis(args, sent_df, id2meta, out_dir)
+        jump_to_nli_analysis(args, sent_df, id2meta, out_dir, custom_labels=custom_labels)
         return
 
     # 1) 대상 business_id 결정
@@ -279,7 +279,7 @@ def main():
         if args.quick_test:
             sent_df = sample_sentences_for_quick_test(sent_df, args.sample_size, args.verbose)
         
-        jump_to_nli_analysis(args, sent_df, id2meta, out_dir)
+        jump_to_nli_analysis(args, sent_df, id2meta, out_dir, custom_labels=custom_labels)
     elif args.dry_run:
         print(f"[DRY RUN] Would run NLI analysis with {args.nli_scope} scope")
     else:
@@ -295,7 +295,7 @@ def main():
         print("   • Better handling of complex multi-label scenarios")
 
 
-def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Path):
+def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Path, custom_labels=Nonecustom_labels=custom_labels):
     """NLI 분석 실행"""
     print("[Step 3/3] NLI Multi-Label Analysis...")
     
@@ -446,4 +446,5 @@ def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Pa
 
 if __name__ == "__main__":
     main()
+
 
