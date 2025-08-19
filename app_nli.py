@@ -1381,11 +1381,20 @@ if data_source == "Run new pipeline":
     with st.sidebar.expander("🔧 Advanced NLI Settings"):
         nli_model_name = st.selectbox(
             "NLI Model", 
-            ["microsoft/deberta-v3-base-mnli", "microsoft/DialoGPT-medium", "roberta-large-mnli"],
-            index=0
+            [
+                "microsoft/deberta-v3-base-mnli",        # 🥇 새 기본값
+                "microsoft/deberta-v3-large-mnli", 
+                "microsoft/deberta-base-mnli",
+                "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+                "facebook/bart-large-mnli",              # 기존 옵션 유지
+                "roberta-large-mnli"
+            ],
+            index=0,
+            help="DeBERTa models recommended for best NLI performance"
         )
         
-        min_prob = st.slider("Label confidence threshold", 0.1, 0.9, 0.4, 0.05)
+        min_prob = st.slider("Label confidence threshold", 0.1, 0.9, 0.35, 0.05,  # 0.4 → 0.35
+                            help="DeBERTa optimal range: 0.3-0.4")
         batch_size = st.number_input("Batch size", min_value=4, max_value=64, value=16, step=4)
         
         # Label settings
@@ -1766,7 +1775,7 @@ else:
     st.sidebar.subheader("📁 Load Existing Results")
     
     # Auto-populate scan directory if pipeline just ran
-    default_scan_dir = st.session_state.get('scan_dir_auto', './outputs_nli')  # NLI 기본 디렉토리
+    default_scan_dir = st.session_state.get('scan_dir_auto', './outputs_nli')  # main_final.py와 일치
     scan_dir = st.sidebar.text_input("Results Directory", value=default_scan_dir)
     
     # File discovery
