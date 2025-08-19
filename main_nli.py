@@ -295,7 +295,7 @@ def main():
         print("   • Better handling of complex multi-label scenarios")
 
 
-def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Path, custom_labels=Nonecustom_labels=custom_labels):
+def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Path, custom_labels=None):
     """NLI 분석 실행"""
     print("[Step 3/3] NLI Multi-Label Analysis...")
     
@@ -446,5 +446,6 @@ def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Pa
 
 if __name__ == "__main__":
     main()
+
 
 
