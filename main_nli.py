@@ -71,6 +71,11 @@ def parse_args():
                    help="Label selection mode: core(basic), auto(trigger-based), full(all)")
     p.add_argument("--local-only", action="store_true", default=True,  # DeBERTa는 일반적으로 캐시됨
                    help="Use only cached models (no online download)")
+    #제로샷 라벨링 커스텀
+    p.add_argument("--labels", type=str, default=None,
+               help="Custom candidate labels separated by ';' (e.g., 'taste;service;price')")
+    p.add_argument("--labels-file", type=str, default=None,
+               help="Path to a file containing custom labels (txt/csv/json)")
 
     # 출력 경로/파일명 - app.py와 호환성 보장
     p.add_argument("--out-dir", type=str, default="./outputs_nli",  # app.py 기본 디렉토리와 일치
@@ -120,10 +125,53 @@ def sample_sentences_for_quick_test(sent_df: pd.DataFrame, sample_size: int, ver
         print(f"[Quick Test] Total sampled: {len(result)}/{len(sent_df)} sentences")
     return result
 
+def _load_custom_labels(args):
+    import json
+    import pandas as pd
+    labels = None
+    if args.labels:
+        labels = [s.strip() for s in args.labels.split(";") if s.strip()]
+    elif args.labels_file:
+        p = Path(args.labels_file)
+        if not p.exists():
+            raise SystemExit(f"❌ Labels file not found: {p}")
+        # 포맷 자동 감지: .json / .csv / 그 외(txt)
+        if p.suffix.lower() == ".json":
+            obj = json.loads(p.read_text(encoding="utf-8"))
+            if isinstance(obj, dict):
+                # {"labels": [...]} 또는 {"candidate_labels": [...]} 지원
+                for k in ("labels", "candidate_labels"):
+                    if k in obj and isinstance(obj[k], list):
+                        labels = [str(x).strip() for x in obj[k] if str(x).strip()]
+                        break
+                if labels is None:
+                    raise SystemExit("❌ JSON must contain 'labels' or 'candidate_labels' list.")
+            elif isinstance(obj, list):
+                labels = [str(x).strip() for x in obj if str(x).strip()]
+            else:
+                raise SystemExit("❌ Unsupported JSON structure for labels.")
+        elif p.suffix.lower() == ".csv":
+            df = pd.read_csv(p)
+            # 첫 컬럼 사용 또는 'label'/'labels' 컬럼 자동 탐지
+            cand_cols = [c for c in df.columns if c.lower() in ("label","labels","candidate_label","candidate_labels")]
+            col = cand_cols[0] if cand_cols else df.columns[0]
+            labels = [str(x).strip() for x in df[col].dropna().tolist() if str(x).strip()]
+        else:
+            # txt: 줄 단위
+            lines = p.read_text(encoding="utf-8").splitlines()
+            labels = [ln.strip() for ln in lines if ln.strip()]
+    return labels
+
 
 def main():
     args = parse_args()
     start_time = time.time()
+
+    
+    #custom label 추
+    custom_labels = _load_custom_labels(args)
+    if args.verbose and custom_labels:
+    print(f"🧩 Using custom labels ({len(custom_labels)}): {custom_labels[:8]}{' ...' if len(custom_labels)>8 else ''}")
     
     if args.verbose:
         print("🚀 Starting DeBERTa NLI Multi-Label Pipeline")
@@ -280,18 +328,19 @@ def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Pa
             print(f"🔍 Running NLI analysis: scope={scope}, business_id={business_id}")
             
         start_time = time.time()
-        
+
+        #커스텀 라벨 추
         result_df, summary_df = apply_nli_multilabel_for_business(
-            sentences_csv_path=str(PATH_SENT_WITH_SENT) if not args.quick_test else None,  # None이면 sent_df 직접 사용
-            out_csv_path=str(out_base_path),
-            business_id=business_id,
-            nli_model=args.nli_model,
-            min_prob=args.min_prob,
-            label_mode=args.label_mode,
-            batch_size=args.batch_size,
-            local_files_only=args.local_only,
-            business_meta=id2meta
-        )
+        sentences_csv_path=str(PATH_SENT_WITH_SENT) if not args.quick_test else None,
+        out_csv_path=str(out_base_path),
+        business_id=business_id,
+        nli_model=args.nli_model,
+        min_prob=args.min_prob,
+        label_mode=args.label_mode,
+        batch_size=args.batch_size,
+        local_files_only=args.local_only,
+        business_meta=id2meta,
+        candidate_labels=custom_labels)
         
         elapsed = time.time() - start_time
         base = str(out_base_path)
@@ -397,3 +446,4 @@ def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Pa
 
 if __name__ == "__main__":
     main()
+
