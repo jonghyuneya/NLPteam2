@@ -35,6 +35,8 @@ def clean_text(text: str) -> str:
 # 라벨 팩 정의 (기존과 동일)
 LABEL_CORE = [
     # Service/Operations
+    "reservation system and booking experience (open table, booking app, overbooked)"
+    "service charge and tipping policy (gratuity, service fee, tip included)"
     "wait time and queue management (waitlist, minutes, seated, reservation)",
     "host and seating process (hostess, greeting, table assignment)",
     "server friendliness and politeness (friendly, rude, courteous)",
@@ -45,6 +47,8 @@ LABEL_CORE = [
     "payment methods and checkout (contactless, tap to pay, cash only)",
     "manager response and recovery (manager, apology, comped)",
     # Cleanliness/Safety
+    "pest and infestation issues (flies, roaches, bugs)"
+    "food safety and illness reports (food poisoning, stomach ache)"
     "tableware and utensils cleanliness (fork, plate, glass, stains)",
     "dining area cleanliness (floor, wiped, bussing, trash)",
     "restroom cleanliness and supplies (bathroom, soap, paper)",
@@ -63,6 +67,7 @@ LABEL_CORE = [
     "ada accessibility and ramps (wheelchair, ramp, accessible restroom)",
     "family friendly and kids options (kids menu, stroller, highchair)",
     # Menu/Value/Food
+    "dietary options and customization (vegan, vegetarian, keto, halal, gluten free request)"
     "menu variety and seasonal specials (options, choices, seasonal)",
     "menu clarity and descriptions (pictures, translations)",
     "value for money and price fairness (worth, expensive)",
@@ -73,6 +78,7 @@ LABEL_CORE = [
     "texture and doneness accuracy (overcooked, undercooked, tender, crispy)",
     "temperature of dishes at serving (served cold, piping hot, lukewarm)",
     # Delivery/Takeout
+    "delivery fees and minimum order (delivery fee, surcharge, minimum spend)"
     "online ordering usability (app, website, checkout)",
     "delivery time and temperature (late delivery, cold on arrival)",
     "takeout packaging and spill protection (container, leak, soggy)",
@@ -439,4 +445,5 @@ def apply_nli_multilabel_for_business(
     print("[Stage] Done.")
     print(f"[Summary] Generated {len(summary_df[summary_df['topic_id'] != -1])} topics from {n_docs} sentences")
     
+
     return d_with_topics, summary_df
