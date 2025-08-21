@@ -84,24 +84,6 @@ LABEL_CORE = [
     "takeout packaging and spill protection (container, leak, soggy)",
 ]
 
-PACK_MENU_GENERIC = [
-    "breakfast and brunch dishes (pancakes, benedict, omelet)",
-    "sandwiches and burgers (burger, bun, BLT, club)",
-    "pizza and flatbreads (pizza, crust, slice)",
-    "pasta and noodles (pasta, spaghetti, noodles)",
-    "steaks and grilled meats (steak, medium rare, ribeye)",
-    "barbecue and smoked meats (bbq, brisket, ribs)",
-    "seafood dishes general (shrimp, crab, oyster, salmon)",
-    "sushi and raw items (sushi, sashimi, nigiri)",
-    "tacos and mexican dishes (taco, burrito, salsa)",
-    "asian stir-fry and rice dishes (fried rice, stir fry, curry)",
-    "salads and healthy bowls (salad, bowl, greens)",
-    "soups and stews (soup, broth, stew)",
-    "appetizers and sides (starter, fries, wings)",
-    "desserts and sweets (dessert, cake, pie, ice cream)",
-    "pastries and baked goods (croissant, pastry, bread)",
-]
-
 PACK_BEVERAGE_BAR = [
     "coffee and espresso drinks (latte, cappuccino, espresso)",
     "tea and non coffee beverages (tea, herbal, iced tea)",
@@ -447,3 +429,4 @@ def apply_nli_multilabel_for_business(
     
 
     return d_with_topics, summary_df
+
