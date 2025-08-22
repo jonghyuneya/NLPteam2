@@ -1,0 +1,37 @@
+# NLI 기반 레스토랑 리뷰 분석 시스템 필수 라이브러리
+
+# 기본 데이터 처리
+pandas>=1.3.0
+numpy>=1.21.0
+pathlib2>=2.3.6  
+datasets>=2.0.0 
+
+# 자연어 처리
+transformers>=4.20.0
+torch>=1.10.0
+tokenizers>=0.13.0
+nltk>=3.7
+spacy>=3.4.0
+sentence-transformers>=2.2.0
+
+# 토픽 모델링
+bertopic>=0.15.0
+umap-learn>=0.5.3
+hdbscan>=0.8.28
+scikit-learn>=1.0.0
+
+# 웹 애플리케이션
+streamlit>=1.20.0
+
+# 기타 유틸리티
+tqdm>=4.64.0
+python-dotenv>=0.19.0
+
+# 정규표현식 확장
+regex>=2022.7.9
+
+# OpenAI API
+openai>=1.0.0
+
+# 추가 설치 필요사항:
+# spaCy 언어 모델: python -m spacy download en_core_web_sm
