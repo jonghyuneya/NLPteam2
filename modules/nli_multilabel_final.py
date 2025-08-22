@@ -236,15 +236,21 @@ def create_aspect_summary(sentences_df: pd.DataFrame) -> pd.DataFrame:
         aspect_sentences = sentences_df[sentences_df['assigned_aspects'].apply(lambda x: aspect in x)]
         
         if len(aspect_sentences) > 0:
+            # 해당 측면의 평균 스코어 계산 - 수정된 부분
+            aspect_scores = []
+            for idx, row in aspect_sentences.iterrows():
+                if aspect in row['assigned_aspects']:
+                    aspect_idx = row['assigned_aspects'].index(aspect)
+                    if aspect_idx < len(row['aspect_scores']):
+                        aspect_scores.append(row['aspect_scores'][aspect_idx])
+            
             stats = {
                 'aspect': aspect,
                 'n_sentences': len(aspect_sentences),
                 'share': len(aspect_sentences) / len(sentences_df),
                 'avg_sentiment': aspect_sentences['sentiment'].mean() if 'sentiment' in aspect_sentences.columns else None,
                 'avg_stars': aspect_sentences['stars'].mean() if 'stars' in aspect_sentences.columns else None,
-                'avg_score': aspect_sentences['aspect_scores'].apply(
-                    lambda scores: np.mean([s for s, a in zip(scores, aspect_sentences.loc[scores.name, 'assigned_aspects']) if a == aspect])
-                ).mean(),
+                'avg_score': np.mean(aspect_scores) if aspect_scores else 0.0,  # 수정된 부분
                 'positive_ratio': (aspect_sentences['sentiment'] == 1).mean() if 'sentiment' in aspect_sentences.columns else None
             }
             aspect_stats.append(stats)
@@ -394,4 +400,5 @@ def apply_nli_aspect_analysis(
     print(f"[Summary] Analyzed {len(aspects)} aspects across {n_docs} sentences")
     print(f"[Summary] Found {len(summary_df)} aspects with assigned sentences")
     
+
     return d_with_aspects, summary_df
