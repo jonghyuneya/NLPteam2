@@ -90,7 +90,7 @@ class NLIMultiLabelClassifier:
     """NLI 기반 멀티라벨 분류기"""
     
     def __init__(self, 
-                 model_name: str = "cross-encoder/nli-deberta-v3-base",
+                 model_name: str = "MoritzLaurer/DeBERTa-v3-base-mnli",
                  device: str = "auto",
                  batch_size: int = 16,
                  local_files_only: bool = True):
@@ -236,7 +236,7 @@ def apply_nli_multilabel_for_business(
     sentences_csv_path: str,
     out_csv_path: str,
     business_id: Optional[str] = None,
-    nli_model: str = "cross-encoder/nli-deberta-v3-base",
+    nli_model: str = "MoritzLaurer/DeBERTa-v3-base-mnli",
     min_prob: float = 0.8,
     batch_size: int = 16,
     local_files_only: bool = True,
@@ -369,4 +369,5 @@ def apply_nli_multilabel_for_business(
     print("[Stage] Done.")
     print(f"[Summary] Generated {len(summary_df[summary_df['topic_id'] != -1])} topics from {n_docs} sentences")
     
+
     return d_with_topics, summary_df
