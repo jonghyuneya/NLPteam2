@@ -3,7 +3,6 @@ Package Setup
 
 1. pip install -e . 로 설치
 2. spaCy 언어 모델 (별도 설치 필요):
-3. NLTK 데이터 다운로드 (필요시):
    python -m spacy download en_core_web_sm
 """
 
@@ -28,4 +27,5 @@ setup(
     version="1.0.0",
     packages=find_packages(),
     install_requires=read_requirements(),
+
 )
