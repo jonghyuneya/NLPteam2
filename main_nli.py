@@ -52,8 +52,9 @@ def parse_args():
                    help="Optional: pre-filter stores by raw review count (0=ignore)")
 
     # 🎯 NLI 파라미터
-    p.add_argument("--nli-model", type=str, default="cross-encoder/nli-deberta-v3-base",
+    p.add_argument("--nli-model", type=str, default="MoritzLaurer/DeBERTa-v3-base-mnli",
                    choices=[
+                       "MoritzLaurer/DeBERTa-v3-base-mnli",
                        "cross-encoder/nli-deberta-v3-base", 
                        "microsoft/deberta-v3-large-mnli",       
                        "microsoft/deberta-base-mnli",           # 클래식 버전
@@ -391,3 +392,4 @@ def jump_to_nli_analysis(args, sent_df: pd.DataFrame, id2meta: dict, out_dir: Pa
 
 if __name__ == "__main__":
     main()
+
