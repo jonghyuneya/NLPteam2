@@ -303,8 +303,8 @@ def apply_nli_aspect_analysis(
     docs_raw = d["sentence"].fillna("").astype(str).tolist()
     clean_docs = [clean_text(t) for t in docs_raw]
     
-    # 최소 토큰 길이 필터 (10단어 이상)
-    token_min = 10
+    # 최소 토큰 길이 필터 (4단어 이상)
+    token_min = 4
     token_counts = [len(x.split()) for x in clean_docs]
     keep_mask = [tc >= token_min for tc in token_counts]
     d = d.loc[keep_mask].reset_index(drop=True)
